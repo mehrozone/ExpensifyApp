@@ -3,6 +3,8 @@ import {setDisableDismissOnEscape} from './actions/Modal';
 import shouldOpenOnAdminRoom from './Navigation/helpers/shouldOpenOnAdminRoom';
 import Navigation from './Navigation/Navigation';
 import {findLastAccessedReport, isConciergeChatReport} from './ReportUtils';
+import Onyx from 'react-native-onyx';
+import ONYXKEYS from '@src/ONYXKEYS';
 
 const navigateAfterOnboarding = (
     isSmallScreenWidth: boolean,
@@ -42,11 +44,22 @@ const navigateAfterOnboarding = (
         return;
     }
 
-    // We're using Navigation.isNavigationReady here because without it, on iOS,
-    // Navigation.dismissModal runs after Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route)
-    // And dismisses the modal before it even shows
-    Navigation.isNavigationReady().then(() => {
-        Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route);
+    // Check if the user has already seen the Test Drive modal
+    const connectionID = Onyx.connect({
+        key: ONYXKEYS.NVP_HAS_SEEN_TEST_DRIVE_MODAL,
+        callback: (hasSeenTestDriveModal: boolean | undefined) => {
+            if (hasSeenTestDriveModal) {
+                Onyx.disconnect(connectionID);
+                return;
+            }
+            Onyx.disconnect(connectionID);
+            // We're using Navigation.isNavigationReady here because without it, on iOS,
+            // Navigation.dismissModal runs after Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route)
+            // And dismisses the modal before it even shows
+            Navigation.isNavigationReady().then(() => {
+                Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route);
+            });
+        },
     });
 };
 

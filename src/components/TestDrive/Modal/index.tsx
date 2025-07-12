@@ -4,9 +4,13 @@ import CONST from '@src/CONST';
 import ONYXKEYS from '@src/ONYXKEYS';
 import AdminTestDriveModal from './AdminTestDriveModal';
 import EmployeeTestDriveModal from './EmployeeTestDriveModal';
+import Onyx from 'react-native-onyx';
 
 function TestDriveModal() {
     const [introSelected] = useOnyx(ONYXKEYS.NVP_INTRO_SELECTED, {canBeMissing: false});
+    React.useEffect(() => {
+        Onyx.set(ONYXKEYS.NVP_HAS_SEEN_TEST_DRIVE_MODAL, true);
+    }, []);
     const isAdminTester = introSelected?.choice === CONST.ONBOARDING_CHOICES.MANAGE_TEAM || introSelected?.choice === CONST.ONBOARDING_CHOICES.TRACK_WORKSPACE;
 
     return isAdminTester ? <AdminTestDriveModal /> : <EmployeeTestDriveModal />;

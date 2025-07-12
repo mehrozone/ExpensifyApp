@@ -53,6 +53,7 @@ import type * as OnyxTypes from '@src/types/onyx';
 import type {QuickActionName} from '@src/types/onyx/QuickAction';
 import {isEmptyObject} from '@src/types/utils/EmptyObject';
 import mapOnyxCollectionItems from '@src/utils/mapOnyxCollectionItems';
+import Onyx from 'react-native-onyx';
 
 type PolicySelector = Pick<OnyxTypes.Policy, 'type' | 'role' | 'isPolicyExpenseChatEnabled' | 'pendingAction' | 'avatarURL' | 'name' | 'id' | 'areInvoicesEnabled'>;
 
@@ -517,7 +518,15 @@ function FloatingActionButtonAndPopover({onHideCreateMenu, onShowCreateMenu, isT
                                       completeTestDriveTask(viewTourReport, viewTourReportID, isAnonymousUser());
                                       Navigation.navigate(ROUTES.TEST_DRIVE_DEMO_ROOT);
                                   } else {
-                                      Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route);
+                                      const connectionID = Onyx.connect({
+                                          key: ONYXKEYS.NVP_HAS_SEEN_TEST_DRIVE_MODAL,
+                                          callback: (hasSeenTestDriveModal: boolean | undefined) => {
+                                              if (!hasSeenTestDriveModal) {
+                                                  Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route);
+                                              }
+                                              Onyx.disconnect(connectionID);
+                                          },
+                                      });
                                   }
                               });
                           }),

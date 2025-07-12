@@ -219,19 +219,19 @@ const ONYXKEYS = {
     /** The NVP containing all information necessary to connect with Spotnana */
     NVP_TRAVEL_SETTINGS: 'nvp_travelSettings',
 
-    /** The start date (yyyy-MM-dd HH:mm:ss) of the workspace owner’s free trial period. */
+    /** The start date (yyyy-MM-dd HH:mm:ss) of the workspace owner's free trial period. */
     NVP_FIRST_DAY_FREE_TRIAL: 'nvp_private_firstDayFreeTrial',
 
-    /** The end date (yyyy-MM-dd HH:mm:ss) of the workspace owner’s free trial period. */
+    /** The end date (yyyy-MM-dd HH:mm:ss) of the workspace owner's free trial period. */
     NVP_LAST_DAY_FREE_TRIAL: 'nvp_private_lastDayFreeTrial',
 
     /** ID associated with the payment card added by the user. */
     NVP_BILLING_FUND_ID: 'nvp_expensify_billingFundID',
 
-    /** The amount owed by the workspace’s owner. */
+    /** The amount owed by the workspace's owner. */
     NVP_PRIVATE_AMOUNT_OWED: 'nvp_private_amountOwed',
 
-    /** The end date (epoch timestamp) of the workspace owner’s grace period after the free trial ends. */
+    /** The end date (epoch timestamp) of the workspace owner's grace period after the free trial ends. */
     NVP_PRIVATE_OWNER_BILLING_GRACE_PERIOD_END: 'nvp_private_billingGracePeriodEnd',
 
     /**  The NVP containing the target url to navigate to when deleting a transaction */
@@ -851,6 +851,13 @@ const ONYXKEYS = {
 
     /** Stores HybridApp specific state required to interoperate with OldDot */
     HYBRID_APP: 'hybridApp',
+
+    /**
+     * This NVP contains whether the user has seen the Test Drive modal
+     * undefined : user has never seen the modal
+     * true : user has seen the modal and does not want to see it again
+     */
+    NVP_HAS_SEEN_TEST_DRIVE_MODAL: 'nvp_hasSeenTestDriveModal',
 } as const;
 
 type AllOnyxKeys = DeepValueOf<typeof ONYXKEYS>;
@@ -1199,6 +1206,7 @@ type OnyxValuesMapping = {
     [ONYXKEYS.NVP_LAST_ANDROID_LOGIN]: string;
     [ONYXKEYS.TRANSACTION_THREAD_NAVIGATION_REPORT_IDS]: string[];
     [ONYXKEYS.HYBRID_APP]: OnyxTypes.HybridApp;
+    [ONYXKEYS.NVP_HAS_SEEN_TEST_DRIVE_MODAL]: boolean;
 };
 
 type OnyxDerivedValuesMapping = {

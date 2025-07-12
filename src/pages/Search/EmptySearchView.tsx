@@ -44,6 +44,7 @@ import ONYXKEYS from '@src/ONYXKEYS';
 import ROUTES from '@src/ROUTES';
 import type {Policy} from '@src/types/onyx';
 import type {SearchDataTypes} from '@src/types/onyx/SearchResults';
+import Onyx from 'react-native-onyx';
 
 type EmptySearchViewProps = {
     hash: number;
@@ -214,7 +215,15 @@ function EmptySearchView({hash, type, groupBy, hasResults}: EmptySearchViewProps
                     completeTestDriveTask(viewTourReport, viewTourReportID);
                     Navigation.navigate(ROUTES.TEST_DRIVE_DEMO_ROOT);
                 } else {
-                    Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route);
+                    const connectionID = Onyx.connect({
+                        key: ONYXKEYS.NVP_HAS_SEEN_TEST_DRIVE_MODAL,
+                        callback: (hasSeenTestDriveModal: boolean | undefined) => {
+                            if (!hasSeenTestDriveModal) {
+                                Navigation.navigate(ROUTES.TEST_DRIVE_MODAL_ROOT.route);
+                            }
+                            Onyx.disconnect(connectionID);
+                        },
+                    });
                 }
             });
         };
